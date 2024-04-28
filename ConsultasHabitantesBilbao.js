@@ -75,6 +75,22 @@ db.HabitantesBilbao.aggregate([
   }
 ])
 
+// CONSULTA 5: Encontrar en la base de datos HabitantesAgregados los primero 3 distritos de hombres y de mujeres. 
+db.HabitantesAgregados.aggregate([
+  {$group:
+     {
+        _id: "$SEXO",
+        firstDistricts:
+           {
+              $firstN:
+                 {
+                    input: ["$DISTRITO","$total_habitantes"],
+                    n: 3
+                 }
+           }
+     }
+  }
+] )
   
 
   
