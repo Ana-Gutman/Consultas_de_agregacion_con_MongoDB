@@ -35,7 +35,7 @@ db.HabitantesBilbao.aggregate([
     $sort: { total_habitantes: 1 } 
   },
   {
-    $out: "habitantes_agregados"
+    $out: "HabitantesAgregados"
   }
 ])
   
