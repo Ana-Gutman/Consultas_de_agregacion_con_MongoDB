@@ -134,6 +134,69 @@ db.HabitantesAgregados.aggregate([
      }
   }
 ] )
-  
 
+// COSNULTA 6:  Encontrar para hombres y mujeres los n distritos y secciones:
+//i) con la mayor cantidad de habitantes recien nacidos
+db.HabitantesBilbao.aggregate([
+  {
+    $group: {
+      _id: "$SEXO",
+      maxNDistricts: {
+        $maxN: {
+          input: ["$0 ANO", "$DISTRITO", "$SECCION"],
+          n: 5
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      Sexo: "$_id",
+      maxNDistricts: {
+        $map: {
+          input: "$maxNDistricts",
+          as: "district",
+          in: {
+            Distrito: { $arrayElemAt: ["$$district", 1] },
+            Seccion: { $arrayElemAt: ["$$district", 2] },
+            "Cantidad de habitantes": { $arrayElemAt: ["$$district", 0] }
+          }
+        }
+      }
+    }
+  }
+])
+
+//ii) con la menor cantidad de habitantes recien nacidos
+db.HabitantesBilbao.aggregate([
+  {
+    $group: {
+      _id: "$SEXO",
+      minNDistricts: {
+        $minN: {
+          input: ["$0 ANO", "$DISTRITO", "$SECCION"],
+          n: 5
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      Sexo: "$_id",
+      minNDistricts: {
+        $map: {
+          input: "$minNDistricts",
+          as: "district",
+          in: {
+            Distrito: { $arrayElemAt: ["$$district", 1] },
+            Seccion: { $arrayElemAt: ["$$district", 2] },
+            "Cantidad de habitantes": { $arrayElemAt: ["$$district", 0] }
+          }
+        }
+      }
+    }
+  }
+])
   
