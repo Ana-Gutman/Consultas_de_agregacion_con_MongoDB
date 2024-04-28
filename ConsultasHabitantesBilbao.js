@@ -1,4 +1,4 @@
-// CONSULTA 1: Contar el número total de habitantes por distrito
+// CONSULTA 1: Contar el número total de habitantes por distritos y devolverlos en órden descendente
 db.HabitantesBilbao.aggregate([
    {$group: {
             _id: "$DISTRITO",
@@ -12,7 +12,7 @@ db.HabitantesBilbao.aggregate([
      {$sort: {total_habitantes:-1}}
 ])
 
-// CONSULTA 2: Contar la cantidad de habitantes por distrito y sexo. Luego exportar los valores ordenados de menor a mayor a un nuevo archivo llamado “habitantes_agregados.csv” 
+// CONSULTA 2: Contar la cantidad de habitantes por distrito y sexo. Luego exportar los valores ordenados ascendentemente a un nuevo archivo llamado “habitantes_agregados.csv” 
 db.HabitantesBilbao.aggregate([
   {
     $group: {
@@ -52,8 +52,7 @@ db.HabitantesBilbao.aggregate([
   ])
 
 // CONSULTA 4: Encontrar para hombres y mujeres el distrito y sección con la mayor cantidad de habitantes de 110 años
-
-//Usando operador bottom y ordenando de manera ascendente 
+//i) Usando operador bottom y ordenando de manera ascendente 
 db.HabitantesBilbao.aggregate([
   {
     $group: {
@@ -77,7 +76,7 @@ db.HabitantesBilbao.aggregate([
   }
 ])
 
-//Usando operador top y ordenando de manera descendente
+//ii) Usando operador top y ordenando de manera descendente
 db.HabitantesBilbao.aggregate([
   {
     $group: {
