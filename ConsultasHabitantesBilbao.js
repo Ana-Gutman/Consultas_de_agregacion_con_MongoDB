@@ -52,6 +52,8 @@ db.HabitantesBilbao.aggregate([
   ])
 
 // CONSULTA 4: Encontrar para hombres y mujeres el distrito y sección con la mayor cantidad de habitantes de 110 años
+
+//Usando operador bottom y ordenando de manera ascendente 
 db.HabitantesBilbao.aggregate([
   {
     $group: {
@@ -75,7 +77,32 @@ db.HabitantesBilbao.aggregate([
   }
 ])
 
-// CONSULTA 5: Encontrar en la base de datos HabitantesAgregados los primero 3 distritos de hombres y de mujeres. 
+//Usando operador top y ordenando de manera descendente
+db.HabitantesBilbao.aggregate([
+  {
+    $group: {
+      _id: "$SEXO",
+      distrito: {
+        $top: {
+          output: ["$DISTRITO", "$SECCION", "$110 ANOS"],
+          sortBy: { "110 ANOS": -1 }
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      sexo: "$_id", 
+      "Cantidad máxima de habitantes": { $arrayElemAt: ["$distrito", 2] }, 
+      "Sección": { $arrayElemAt: ["$distrito", 1] }, 
+      "Distrito": { $arrayElemAt: ["$distrito", 0] }
+    }
+  }
+])
+
+// CONSULTA 5: Agrupando por sexo en la base de datos HabitantesAgregados devolver:
+//i) los primero 3 distritos y su cantidad total de habitantes
 db.HabitantesAgregados.aggregate([
   {$group:
      {
@@ -83,6 +110,23 @@ db.HabitantesAgregados.aggregate([
         firstDistricts:
            {
               $firstN:
+                 {
+                    input: ["$DISTRITO","$total_habitantes"],
+                    n: 3
+                 }
+           }
+     }
+  }
+])
+
+// ii) los últimos 3 distritos y su cantidad total de habitantes
+db.HabitantesAgregados.aggregate([
+  {$group:
+     {
+        _id: "$SEXO",
+        firstDistricts:
+           {
+              $lastN:
                  {
                     input: ["$DISTRITO","$total_habitantes"],
                     n: 3
