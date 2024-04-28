@@ -47,6 +47,31 @@ db.HabitantesBilbao.aggregate([
     { $unwind: "$SECCION" },
     { $limit: 5 }
   ])
+
+// CONSULTA 4: Encontrar para hombres y mujeres el distrito y sección con la mayor cantidad de habitantes de 110 años
+db.HabitantesBilbao.aggregate([
+  {
+    $group: {
+      _id: "$SEXO",
+      distrito: {
+        $bottom: {
+          output: ["$DISTRITO", "$SECCION", "$110 ANOS"],
+          sortBy: { "110 ANOS": 1 }
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      sexo: "$_id", 
+      "Cantidad máxima de habitantes": { $arrayElemAt: ["$distrito", 2] }, 
+      "Sección": { $arrayElemAt: ["$distrito", 1] }, 
+      "Distrito": { $arrayElemAt: ["$distrito", 0] }
+    }
+  }
+])
+
   
 
   
