@@ -40,7 +40,7 @@ db.HabitantesBilbao.aggregate([
 ])
   
 
-// CONSULTA 3: Encontrar los habitantes de un distrito específico, desglosar los datos por sección y limitar el número de secciones a 5
+// CONSULTA 3: Encontrar los habitantes de un distrito específico, desglosar los datos por sección y limitar el número de secciones a 3
 db.HabitantesBilbao.aggregate([
     {
       $match: {
@@ -48,7 +48,7 @@ db.HabitantesBilbao.aggregate([
       }
     },
     { $unwind: "$SECCION" },
-    { $limit: 5 }
+    { $limit: 3 }
   ])
 
 // CONSULTA 4: Encontrar para hombres y mujeres el distrito y sección con la mayor cantidad de habitantes de 110 años
